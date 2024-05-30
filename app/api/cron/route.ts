@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
       error_msg: errorMsg,
       time_took: performance.now() - startTime,
     });
-    return Response.json({ success: false });
+    return new Response(errorMsg, { status: 500 });
   }
 
   const supabase = await getSupabaseServerAdminClient();
