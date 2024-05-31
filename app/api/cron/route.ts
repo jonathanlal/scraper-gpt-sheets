@@ -28,11 +28,13 @@ export async function GET(request: NextRequest) {
     const supabase = await getSupabaseServerAdminClient();
     const { data, error } = await supabase.from(DEVELOPMENTS_TABLE).select('*');
 
+    console.log('initial fetch', data, error);
     if (error) {
       throw new Error(error.message);
     }
 
     const existingIds: number[] = data.map((entry) => entry.entry_id);
+    console.log('existingIds', existingIds);
     const rssData = await extract(RSS_URL);
 
     if (!rssData || !rssData.entries || !rssData.entries.length) {
@@ -43,6 +45,7 @@ export async function GET(request: NextRequest) {
       existingIds,
       rssData.entries
     );
+    console.log('mappedEntries', mappedEntries);
 
     //if there are new entries to be processed
     if (mappedEntries.length > 0) {
