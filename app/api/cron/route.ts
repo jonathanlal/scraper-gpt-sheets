@@ -15,6 +15,8 @@ import OpenAI from 'openai';
 export const maxDuration = 60; // This function can run for a maximum of 60 seconds
 
 const cronType = 'FETCH_RSS_AND_GPT';
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const startTime = performance.now();
   let entriesFound,
@@ -45,7 +47,6 @@ export async function GET(request: NextRequest) {
       existingIds,
       rssData.entries
     );
-    console.log('mappedEntries', mappedEntries);
 
     //if there are new entries to be processed
     if (mappedEntries.length > 0) {
