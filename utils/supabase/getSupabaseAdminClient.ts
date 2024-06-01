@@ -1,7 +1,8 @@
+import { Database } from '@/types/supabase';
 import { createClient } from '@supabase/supabase-js';
 
 export default async function getSupabaseServerAdminClient() {
-  const supabase = createClient(
+  const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
