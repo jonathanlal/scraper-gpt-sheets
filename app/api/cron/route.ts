@@ -2,6 +2,7 @@ import { DEVELOPMENTS_TABLE, RSS_URL } from '@/utils/constants';
 import { getMappedNewEntries } from '@/utils/getMappedNewEntries';
 import { makeGPTrequest } from '@/utils/makeGPTrequest';
 import getSupabaseServerAdminClient from '@/utils/supabase/getSupabaseAdminClient';
+import { updateSheet } from '@/utils/updateSheet';
 import { extract } from '@extractus/feed-extractor';
 import type { NextRequest } from 'next/server';
 import OpenAI from 'openai';
@@ -13,7 +14,7 @@ export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   const startTime = performance.now();
-  let entriesFound,
+  let entriesFound = 0,
     entriesGPTd = 0;
   try {
     const authHeader = request.headers.get('authorization');
@@ -79,6 +80,18 @@ export async function GET(request: NextRequest) {
         }
       }
     }
+
+    //add data to sheets
+    if (entriesFound > 0 && entriesGPTd > 0) {
+      const { data } = await supabase
+        .from(DEVELOPMENTS_TABLE)
+        .select('*')
+        .eq('gpt_viewed', true);
+
+      if (data && data.length > 0) {
+        await updateSheet(data);
+      }
+    }
   } catch (e) {
     const errorMsg = (e as Error).message;
 
@@ -92,6 +105,7 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = await getSupabaseServerAdminClient();
+
   await supabase.from('cron').insert({
     type: cronType,
     time_took: performance.now() - startTime,
