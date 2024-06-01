@@ -73,7 +73,8 @@ export async function processWithGPT() {
           location: string;
           rental_or_condo: string | undefined;
           rental_condo: string | undefined;
-          developer_or_company: string;
+          developer_or_company: string | undefined;
+          developer_company: string | undefined;
           number_of_units: string;
           current_status: string;
         } = JSON.parse(response);
@@ -87,7 +88,9 @@ export async function processWithGPT() {
             location: parsedResponse.location,
             rental_condo:
               parsedResponse.rental_or_condo ?? parsedResponse.rental_condo,
-            developer: parsedResponse.developer_or_company,
+            developer:
+              parsedResponse.developer_or_company ??
+              parsedResponse.developer_company,
             number_of_units: parsedResponse.number_of_units,
             status: parsedResponse.current_status,
             gpt_viewed: true,

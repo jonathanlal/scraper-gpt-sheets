@@ -30,13 +30,11 @@ export async function GET(request: NextRequest) {
     const supabase = await getSupabaseServerAdminClient();
     const { data, error } = await supabase.from(DEVELOPMENTS_TABLE).select('*');
 
-    console.log('initial fetch', data, error);
     if (error) {
       throw new Error(error.message);
     }
 
     const existingIds: number[] = data.map((entry) => entry.entry_id);
-    console.log('existingIds', existingIds);
     const rssData = await extract(RSS_URL);
 
     if (!rssData || !rssData.entries || !rssData.entries.length) {
@@ -99,7 +97,8 @@ export async function GET(request: NextRequest) {
             location: string;
             rental_or_condo: string | undefined;
             rental_condo: string | undefined;
-            developer_or_company: string;
+            developer_or_company: string | undefined;
+            developer_company: string | undefined;
             number_of_units: string;
             current_status: string;
           } = JSON.parse(response);
@@ -113,17 +112,20 @@ export async function GET(request: NextRequest) {
               location: parsedResponse.location,
               rental_condo:
                 parsedResponse.rental_or_condo ?? parsedResponse.rental_condo,
-              developer: parsedResponse.developer_or_company,
+              developer:
+                parsedResponse.developer_or_company ??
+                parsedResponse.developer_company,
               number_of_units: parsedResponse.number_of_units,
               status: parsedResponse.current_status,
               gpt_viewed: true,
               gpt_cost: price,
             })
-            .eq('id', entry.entry_id);
+            .eq('entry_id', entry.entry_id);
 
           if (updateError) {
             throw new Error(updateError.message);
           }
+          entriesGPTd = entriesGPTd + 1;
         } else {
           throw new Error(
             `Article with entry_id: ${entry.entry_id} failed to get data from GPT`
