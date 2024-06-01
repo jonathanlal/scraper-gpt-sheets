@@ -4,7 +4,7 @@ import { GPT_MODEL, GPT_SEED, PROMPT } from './constants';
 import { calculateGPTCost } from './calculateGPTCost';
 
 export const makeGPTrequest = async (
-  entry: Omit<TDevelopment, 'gpt_cost' | 'in_sheet' | 'id' | 'gpt_viewed'>,
+  entry: Pick<TDevelopment, 'article_content' | 'title'>,
   openAIClient: OpenAI
 ) => {
   const articleContent = `${entry.title}. ${entry.article_content ?? ''}`;
