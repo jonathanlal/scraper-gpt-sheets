@@ -58,7 +58,7 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedRoutes = ['/'];
+  const protectedRoutes = ['/', '/logs'];
 
   // // if user is not signed in and the current path is protected redirect the user to /
   if (!user && protectedRoutes.includes(request.nextUrl.pathname)) {

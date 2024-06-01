@@ -56,7 +56,6 @@ export async function getNewEntries() {
       };
     }
   } catch (error) {
-    console.log(error);
     return { error: 'Some shit went wrong' };
   }
 }

@@ -18,7 +18,10 @@ export async function GET(request: NextRequest) {
     entriesGPTd = 0;
   try {
     const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (
+      authHeader !== `Bearer ${process.env.CRON_SECRET}` &&
+      process.env.ENVIRONMENT === 'prod'
+    ) {
       throw new Error('Unauthorized');
     }
 

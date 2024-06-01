@@ -5,14 +5,6 @@ import { updateSheet } from '@/utils/updateSheet';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'long',
-    year: 'numeric',
-    day: 'numeric',
-  });
-}
 export const addToSheet = async () => {
   try {
     const supabase = await getSupabaseRouteAndActionClient();
