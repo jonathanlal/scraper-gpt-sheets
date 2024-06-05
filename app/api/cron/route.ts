@@ -93,6 +93,13 @@ export async function GET(request: NextRequest) {
 
       if (data && data.length > 0) {
         await updateSheet(data);
+
+        for (const entry of data) {
+          await supabase
+            .from(DEVELOPMENTS_TABLE)
+            .update({ in_sheet: true })
+            .eq('id', entry.id);
+        }
       }
     }
   } catch (e) {

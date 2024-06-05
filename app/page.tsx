@@ -17,7 +17,8 @@ export default async function Home() {
 
   return (
     <>
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <p>{entries.length} entries</p>
         <Link
           href="/logs"
           className="text-lg underline underline-offset-2 text-blue-600"
